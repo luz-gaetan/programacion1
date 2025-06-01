@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------------------------
 Título: Desarrollo inmobiliario
 Fecha: 27/05/2025
-Autor: Grupo 7 (Joaquina Dias, María Luz Gaetan, Nicolas Mendez, Valentina Clemente)
+Autor: Grupo 7 (Joaquina Dias, María Luz Gaetan, Nicolas Mendez, Valentina Clemente, Brendan Russell)
 
 Descripción:
 
