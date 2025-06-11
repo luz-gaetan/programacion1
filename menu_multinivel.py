@@ -9,21 +9,187 @@ Descripción:
 Pendientes:
 -----------------------------------------------------------------------------------------------
 """
+"""mejorar el resumen anual de propiedades por cantidad y pesos y el informe"""
 
 #----------------------------------------------------------------------------------------------
 # MÓDULOS
 #----------------------------------------------------------------------------------------------
-...
-
+from datetime import datetime
 
 #----------------------------------------------------------------------------------------------
 # FUNCIONES
 #----------------------------------------------------------------------------------------------
-def altaCliente(_clientes):
-    ...
-    return _clientes
+def generar_fecha_hora():
+    ahora = datetime.now()
+    return ahora.strftime("%Y.%m.%d %H:%M:%S")
 
+def valor_alquiler():
+    while True:
+        entrada = input("ingrese el valor del alquiler: ")
+        if entrada == "-1":
+            print("operacion cancelada.")
+            return -1
+        elif entrada.isdigit():
+            return int(entrada)
+        else:
+            print("entrada invalida, tenes q ingresar un numero entero positivo.")
 
+def alta_propietario(propietarios):
+    print("\n--- alta de propietario ---")
+    codigo = input("ingrese el codigo del propietario: ")
+    if codigo in propietarios:
+        print("el propietario ya existe.")
+    else:
+        nombre = input("ingrese nombre completo: ")
+        dni = input("ingrese el dni: ")
+        telefono = input("ingrese el telefono: ")
+        email = input("ingrese el email: ")
+        propietarios[codigo] = {
+            "id": codigo,
+            "nombre": nombre,
+            "dni": dni,
+            "telefono": telefono,
+            "email": email,
+            "activo": True
+        }
+        print("propietario agregado correctamente.")
+    return propietarios
+
+def modificar_propietario(propietarios):
+    codigo = input("ingrese codigo del propietario que qeres modificar: ")
+    if codigo in propietarios and propietarios[codigo]["activo"]:
+        propietarios[codigo]["nombre"] = input("nuevo nombre: ")
+        propietarios[codigo]["dni"] = input("nuevo DNI: ")
+        propietarios[codigo]["telefono"] = input("nuevo telefono: ")
+        propietarios[codigo]["email"] = input("nuevo email: ") 
+        print("propietario modificado.")
+    else:
+        print("propietario no encontrado o inactivo.")
+    return propietarios
+
+def baja_propietario(propietarios):
+    codigo = input("ingrese codigo del propietario a eliminar: ")
+    if codigo in propietarios and propietarios[codigo]["activo"]:
+        propietarios[codigo]["activo"] = False
+        print("propietario desactivado.")
+    else:
+        print("propietario no encontrado o ya inactivo.")
+    return propietarios
+
+def listar_propietarios(propietarios):
+    print("\nListado de propietarios activos:")
+    for cod, datos in propietarios.items():
+        if datos["activo"]:
+            print(f"codigo: {cod} | nombre: {datos['nombre']} | dni: {datos['dni']} | telefeono: {datos['telefono']}| email: {datos['email']}")
+
+def alta_propiedad(propiedades):
+    codigo = input("ingrese codigo de la propiedad: ")
+    if codigo in propiedades:
+        print("la propiedad ya existe.")
+    else:
+        direccion = input("ingrese dirección: ")
+        propietario = input("codigo del propietario: ")
+        valor = valor_alquiler()
+        propiedades[codigo] = {
+            "direccion": direccion,
+            "propietario": propietario,
+            "valor": valor,
+            "activo": True
+        }
+        print("propiedad agregada.")
+    return propiedades
+
+def modificar_propiedad(propiedades):
+    codigo = input("ingrese el codigo de la propiedad a modificar: ")
+    if codigo in propiedades and propiedades[codigo]["activo"]:
+        propiedades[codigo]["direccion"] = input("nueva dirección: ")
+        propiedades[codigo]["propietario"] = input("nuevo codigo del propietario: ")
+        propiedades[codigo]["valor"] = valor_alquiler()
+        print("propiedad modificada.")
+    else:
+        print("propiedad no encontrada o inactiva.")
+    return propiedades
+
+def baja_propiedad(propiedades):
+    codigo = input("ingrese el codigo de la propiedad a eliminar: ").lower()
+    codigo_encontrado = None
+    for key in propiedades:
+        if key.lower() == codigo:
+            codigo_encontrado = key
+            break
+    if codigo_encontrado and propiedades[codigo_encontrado]["activo"]:
+        propiedades[codigo_encontrado]["activo"] = False
+        print("propiedad desactivada.")
+    else:
+        print("propiedad no encontrada o ya inactiva")
+    return propiedades
+
+def listar_propiedades(propiedades):
+    print("\nlistado de propiedades activas:")
+    for cod, datos in propiedades.items():
+        if datos["activo"]:
+            print(f"codigo: {cod} | direccion: {datos['direccion']} | propietario: {datos['propietario']} | alquiler: ${datos['valor']}")
+
+def registrar_comision(propiedades, comisiones):
+    cod_prop = input("ingrese codigo de la propiedad: ")
+    if cod_prop in propiedades and propiedades[cod_prop]["activo"]:
+        valor = propiedades[cod_prop]["valor"]
+        monto = valor * 0.10
+        fecha = generar_fecha_hora()
+        comisiones.append({
+            "fecha": fecha,
+            "propiedad": cod_prop,
+            "monto": monto
+        })
+        print(f"comision registrada: ${monto:.2f} ({fecha})")
+    else:
+        print("propiedad no encontrada o inactiva.")
+    return comisiones
+
+def comisiones_del_mes(comisiones):
+    print("\ncomisiones del mes en curso:")
+    hoy = datetime.now()
+    for c in comisiones:
+        fecha = datetime.strptime(c["fecha"], "%Y.%m.%d %H:%M:%S")
+        if fecha.month == hoy.month and fecha.year == hoy.year:
+            print(f"{c['fecha']} | propiedad: {c['propiedad']} | comision: ${c['monto']:.2f}")
+            
+def resumen_anual_comisiones_valor(comisiones):
+    print("\nresumen anual de comisiones por propiedad (pesos):")
+    año_actual = datetime.now().year
+    totales = {}
+
+    for c in comisiones:
+        fecha = datetime.strptime(c["fecha"], "%Y.%m.%d %H:%M:%S")
+        if fecha.year == año_actual:
+            prop = c["propiedad"]
+            totales[prop] = totales.get(prop, 0) + c["monto"]
+
+    if totales:
+        for prop, monto in totales.items():
+            print(f"propiedad: {prop} | total comisiones: ${monto:.2f}")
+    else:
+        print("no hay comisiones registradas en el año actual.")
+
+def resumen_anual_comisiones_cantidad(comisiones):
+    print("\nresumen anual de comisiones por propiedad (cantidades):")
+    año_actual = datetime.now().year
+    conteo = {}
+
+    for c in comisiones:
+        fecha = datetime.strptime(c["fecha"], "%Y.%m.%d %H:%M:%S")
+        if fecha.year == año_actual:
+            prop = c["propiedad"]
+            conteo[prop] = conteo.get(prop, 0) + 1
+
+    if conteo:
+        for prop, cantidad in conteo.items():
+            print(f"propiedad: {prop} | cantidad de comisiones: {cantidad}")
+    else:
+        print("no hay comisiones registradas en el año actual.")
+
+def informe():
+    print("informe a mejorar / pensar mejor pq no tengo nidea")
 
 #----------------------------------------------------------------------------------------------
 # CUERPO PRINCIPAL
@@ -32,8 +198,44 @@ def main():
     #-------------------------------------------------
     # Inicialización de variables
     #----------------------------------------------------------------------------------------------
-    clientes = {...}
+    propietarios = {
+        "30111222": {"nombre": "Juan Pérez", "dni": "30111222","telefono": "1155550001", "email": "juan@gmail.com", "activo": True},
+        "30222333": {"nombre": "María Gómez", "dni": "30222333","telefono": "1155550002", "email": "maria@gmail.com", "activo": True},
+        "30333444": {"nombre": "Carlos López", "dni": "30333444","telefono": "1155550003", "email": "carlos@gmail.com", "activo": True},
+        "30444555": {"nombre": "Ana Torres", "dni": "30333444","telefono": "1155550004", "email": "ana@gmail.com", "activo": True},
+        "30555666": {"nombre": "Laura Méndez", "dni": "30444555","telefono": "1155550005", "email": "laura@gmail.com", "activo": True},
+        "30666777": {"nombre": "Pedro Rodríguez","dni": "30555666", "telefono": "1155550006", "email": "pedro@gmail.com", "activo": True},
+        "30777888": {"nombre": "Lucía Fernández","dni": "30666777", "telefono": "1155550007", "email": "lucia@gmail.com", "activo": True},
+        "30888999": {"nombre": "Diego Suárez", "dni": "30777888","telefono": "1155550008", "email": "diego@gmail.com", "activo": True},
+        "30999000": {"nombre": "Marta Díaz","dni": "30999000", "telefono": "1155550009", "email": "marta@gmail.com", "activo": True},
+        "31000111": {"nombre": "Jorge Silva","dni": "31000111", "telefono": "1155550010", "email": "jorge@gmail.com", "activo": True},
+        }
 
+    propiedades = {
+        "P001": {"direccion": "Calle 123","propietario": "Juan Pérez", "tipo": "Departamento", "superficie": 75, "valor": 120000, "dni": "30111222","activo": True},
+        "P002": {"direccion": "Av. 456","propietario": "María Gómez", "tipo": "Casa", "superficie": 150, "valor": 250000, "dni": "30222333","activo": True},
+        "P003": {"direccion": "Diag. 789","propietario": "Carlos López", "tipo": "PH", "superficie": 90, "valor": 180000, "dni": "30333444","activo": True},
+        "P004": {"direccion": "Las Heras 101","propietario": "Ana Torres", "tipo": "Casa", "superficie": 200, "valor": 310000, "dni": "30444555","activo": True},
+        "P005": {"direccion": "San Martín 202","propietario": "Laura Méndez", "tipo": "Departamento", "superficie": 60, "valor": 95000, "dni": "30555666","activo": True},
+        "P006": {"direccion": "Belgrano 303","propietario": "Pedro Rodríguez", "tipo": "PH", "superficie": 85, "valor": 150000, "dni": "30666777","activo": True},
+        "P007": {"direccion": "Córdoba 404","propietario": "Lucía Fernández", "tipo": "Departamento", "superficie": 70, "valor": 110000, "dni": "30777888","activo": True},
+        "P008": {"direccion": "Santa Fe 505","propietario": "Diego Suárez", "tipo": "Casa", "superficie": 180, "valor": 290000, "dni": "30888999","activo": True},
+        "P009": {"direccion": "Rivadavia 606","propietario": "Marta Díaz", "tipo": "PH", "superficie": 95, "valor": 160000, "dni": "30999000","activo": True},
+        "P010": {"direccion": "Mitre 707","propietario": "Jorge Silva", "tipo": "Departamento", "superficie": 55, "valor": 87000, "dni": "31000111","activo": True}
+        }
+    
+    comisiones = [
+        {"fecha": "2024.01.15 00:00:00", "codigo_propiedad": "P001", "monto": 3000, "tipo_operacion": "alquiler", "mes_anio": "ENE.24"},
+        {"fecha": "2024.02.10 00:00:00", "codigo_propiedad": "P002", "monto": 12000, "tipo_operacion": "venta", "mes_anio": "FEB.24"},
+        {"fecha": "2024.03.05 00:00:00", "codigo_propiedad": "P003", "monto": 5000, "tipo_operacion": "alquiler", "mes_anio": "MAR.24"},
+        {"fecha": "2024.04.12 00:00:00", "codigo_propiedad": "P004", "monto": 15000, "tipo_operacion": "venta", "mes_anio": "ABR.24"},
+        {"fecha": "2024.05.22 00:00:00", "codigo_propiedad": "P005", "monto": 3500, "tipo_operacion": "alquiler", "mes_anio": "MAY.24"},
+        {"fecha": "2024.06.30 00:00:00", "codigo_propiedad": "P006", "monto": 10000, "tipo_operacion": "venta", "mes_anio": "JUN.24"},
+        {"fecha": "2024.07.08 00:00:00", "codigo_propiedad": "P007", "monto": 4000, "tipo_operacion": "alquiler", "mes_anio": "JUL.24"},
+        {"fecha": "2024.08.19 00:00:00", "codigo_propiedad": "P008", "monto": 13000, "tipo_operacion": "venta", "mes_anio": "AGO.24"},
+        {"fecha": "2024.09.27 00:00:00", "codigo_propiedad": "P009", "monto": 4200, "tipo_operacion": "alquiler", "mes_anio": "SEP.24"},
+        {"fecha": "2024.10.03 00:00:00", "codigo_propiedad": "P010", "monto": 9000, "tipo_operacion": "venta", "mes_anio": "OCT.24"},
+    ]
 
     #-------------------------------------------------
     # Bloque de menú
@@ -93,16 +295,16 @@ def main():
                     break # No sale del programa, sino que vuelve al menú anterior
                 
                 elif opcionSubmenu == "1":   # Opción 1 del submenú
-                    clientes = altaCliente(clientes)
+                    propietarios = alta_propietario(propietarios)
                     
                 elif opcionSubmenu == "2":   # Opción 2 del submenú
-                    ...
+                    propietarios = modificar_propietario(propietarios)
                 
                 elif opcionSubmenu == "3":   # Opción 3 del submenú
-                    ...
+                    propietarios = baja_propietario(propietarios)
                 
                 elif opcionSubmenu == "4":   # Opción 4 del submenú
-                    ...
+                    listar_propietarios(propietarios)
 
                 input("\nPresione ENTER para volver al menú.") # Pausa entre opciones
                 print("\n\n")
@@ -136,17 +338,20 @@ def main():
                     break # No sale del programa, sino que vuelve al menú anterior
                 
                 elif opcionSubmenu == "1":   # Opción 1 del submenú
-                    '''clientes = altaCliente(clientes)'''
                     print("ingrese a la propiedad")
+                    propiedades = alta_propiedad(propiedades)
                     
                 elif opcionSubmenu == "2":   # Opción 2 del submenú
                     print("modifique la propiedad")
+                    propiedades = modificar_propiedad(propiedades)
                 
                 elif opcionSubmenu == "3":   # Opción 3 del submenú
                     print("elimine la propiedad")
+                    propiedades = baja_propiedad(propiedades)
                 
                 elif opcionSubmenu == "4":   # Opción 4 del submenú
                     print("listado de propiedades")
+                    listar_propiedades(propiedades)
 
                 input("\nPresione ENTER para volver al menú.") # Pausa entre opciones
                 print("\n\n")
@@ -176,8 +381,8 @@ def main():
                     break # No sale del programa, sino que vuelve al menú anterior
                 
                 elif opcionSubmenu == "1":   # Opción 1 del submenú
-                    '''clientes = altaCliente(clientes)'''
                     print("registro de comisiones")
+                    comisiones = registrar_comision(propiedades, comisiones)
 
                 input("\nPresione ENTER para volver al menú.") # Pausa entre opciones
                 print("\n\n")
@@ -193,7 +398,7 @@ def main():
                     print("[1] Comisiones del mes")
                     print("[2] Resumen anual de comisiones por propiedad (cantidades)")
                     print("[3] Resumen anual de comisiones por propiedad (pesos)")
-                    print("[4] Ranking de propiedades más rentables")
+                    print("[4] Informe ideado por el equipo")
                     print("---------------------------")
                     print("[0] Volver al menú anterior")
                     print("---------------------------")
@@ -210,16 +415,16 @@ def main():
                     break # No sale del programa, sino que vuelve al menú anterior
                 
                 elif opcionSubmenu == "1":   # Opción 1 del submenú
-                    clientes = altaCliente(clientes)
+                    comisiones_del_mes(comisiones)
                     
                 elif opcionSubmenu == "2":   # Opción 2 del submenú
-                    ...
+                    resumen_anual_comisiones_cantidad(comisiones)
                 
                 elif opcionSubmenu == "3":   # Opción 3 del submenú
-                    ...
+                    resumen_anual_comisiones_valor(comisiones)
                 
                 elif opcionSubmenu == "4":   # Opción 4 del submenú
-                    ...
+                    informe()
 
                 input("\nPresione ENTER para volver al menú.") # Pausa entre opciones
                 print("\n\n")
@@ -227,7 +432,6 @@ def main():
         if opcionSubmenu != "0": # Pausa entre opciones. No la realiza si se vuelve de un submenú
             input("\nPresione ENTER para volver al menú.")
             print("\n\n")
-
 
 # Punto de entrada al programa
 main()
