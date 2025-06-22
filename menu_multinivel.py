@@ -19,27 +19,27 @@ from datetime import datetime
 #----------------------------------------------------------------------------------------------
 # FUNCIONES
 #----------------------------------------------------------------------------------------------
-def generar_fecha_hora():
+def generar_fecha_hora():  #Genera y retorna fecha y hora actual en 'YYYY.MM.DD HH:MM:SS para registrar momentos exactos
     ahora = datetime.now()
     return ahora.strftime("%Y.%m.%d %H:%M:%S")
 
 def valor_alquiler():
     while True:
-        entrada = input("ingrese el valor del alquiler: ")
+        entrada = input("ingrese el valor del alquiler: ") #solicita valor y permite cancelar con-1
         if entrada == "-1":
             print("operacion cancelada.")
             return -1
-        elif entrada.isdigit():
+        elif entrada.isdigit(): 
             return int(entrada)
-        else:
-            print("entrada invalida, tenes q ingresar un numero entero positivo.")
+        else: 
+            print("entrada invalida, tenes q ingresar un numero entero positivo.") #asefura que la entrada sea entera positiva
 
 def alta_propietario(propietarios):
-    print("\n--- alta de propietario ---")
+    print("\n--- alta de propietario ---") #da de alta un nuevo propietario si el codigo no existe
     codigo = input("ingrese el codigo del propietario: ")
     if codigo in propietarios:
         print("el propietario ya existe.")
-    else:
+    else: #solicita datos personales y los almacena en el diccionario
         nombre = input("ingrese nombre completo: ")
         dni = input("ingrese el dni: ")
         telefono = input("ingrese el telefono: ")
@@ -52,41 +52,41 @@ def alta_propietario(propietarios):
             "email": email,
             "activo": True
         }
-        print("propietario agregado correctamente.")
+        print("propietario agregado correctamente.") #mensaje de confirmacion
     return propietarios
 
-def modificar_propietario(propietarios):
+def modificar_propietario(propietarios): #para modificar datos de un propetario
     codigo = input("ingrese codigo del propietario que qeres modificar: ")
     if codigo in propietarios and propietarios[codigo]["activo"]:
-        propietarios[codigo]["nombre"] = input("nuevo nombre: ")
+        propietarios[codigo]["nombre"] = input("nuevo nombre: ") #reemplaza los campos
         propietarios[codigo]["dni"] = input("nuevo DNI: ")
         propietarios[codigo]["telefono"] = input("nuevo telefono: ")
         propietarios[codigo]["email"] = input("nuevo email: ") 
         print("propietario modificado.")
     else:
-        print("propietario no encontrado o inactivo.")
+        print("propietario no encontrado o inactivo.") #si el propietario no es activo, no hay campos a reeplazar
     return propietarios
 
-def baja_propietario(propietarios):
+def baja_propietario(propietarios): #dar de baja a propietarios activos (sin eliminarlos, simplemente cambia el estado)
     codigo = input("ingrese codigo del propietario a eliminar: ")
-    if codigo in propietarios and propietarios[codigo]["activo"]:
-        propietarios[codigo]["activo"] = False
+    if codigo in propietarios and propietarios[codigo]["activo"]: #si se encuentra el codigo ingresado, se reemplaza el valor del codigo (activo = False)
+        propietarios[codigo]["activo"] = False #damos de baja 
         print("propietario desactivado.")
     else:
-        print("propietario no encontrado o ya inactivo.")
+        print("propietario no encontrado o ya inactivo.") #si ya esta inactivo, no hay nada que dar de baja
     return propietarios
 
-def listar_propietarios(propietarios):
+def listar_propietarios(propietarios): #mostrar los propietarios activos
     print("\nListado de propietarios activos:")
-    for cod, datos in propietarios.items():
-        if datos["activo"]:
+    for cod, datos in propietarios.items(): #recorre todos los propietarios
+        if datos["activo"]: #imprime solo los que son activos
             print(f"codigo: {cod} | nombre: {datos['nombre']} | dni: {datos['dni']} | telefeono: {datos['telefono']}| email: {datos['email']}")
 
-def alta_propiedad(propiedades):
+def alta_propiedad(propiedades): #dar de alta una nueva propiedad si no existe
     codigo = input("ingrese codigo de la propiedad: ")
-    if codigo in propiedades:
-        print("la propiedad ya existe.")
-    else:
+    if codigo in propiedades: #si el codigo ya existe, no hay nada que agregar
+        print("la propiedad ya existe.") 
+    else: #no existe el codigo, solicita datos
         direccion = input("ingrese dirección: ")
         propietario = input("codigo del propietario: ")
         valor = valor_alquiler()
@@ -96,47 +96,47 @@ def alta_propiedad(propiedades):
             "valor": valor,
             "activo": True
         }
-        print("propiedad agregada.")
+        print("propiedad agregada.") #mensaje de confirmacion
     return propiedades
 
-def modificar_propiedad(propiedades):
-    codigo = input("ingrese el codigo de la propiedad a modificar: ")
-    if codigo in propiedades and propiedades[codigo]["activo"]:
+def modificar_propiedad(propiedades): #modificar datos de propiedad activa
+    codigo = input("ingrese el codigo de la propiedad a modificar: ") 
+    if codigo in propiedades and propiedades[codigo]["activo"]: #reemplaza dirección, propietario y valor 
         propiedades[codigo]["direccion"] = input("nueva dirección: ")
         propiedades[codigo]["propietario"] = input("nuevo codigo del propietario: ")
         propiedades[codigo]["valor"] = valor_alquiler()
         print("propiedad modificada.")
     else:
-        print("propiedad no encontrada o inactiva.")
+        print("propiedad no encontrada o inactiva.") #al no estar activa, no se pide una nueva solicitud de datos
     return propiedades
 
-def baja_propiedad(propiedades):
+def baja_propiedad(propiedades): #da de baja una propiedad (sin eliminarla)
     codigo = input("ingrese el codigo de la propiedad a eliminar: ").lower()
     codigo_encontrado = None
     for key in propiedades:
         if key.lower() == codigo:
             codigo_encontrado = key
             break
-    if codigo_encontrado and propiedades[codigo_encontrado]["activo"]:
+    if codigo_encontrado and propiedades[codigo_encontrado]["activo"]: 
         propiedades[codigo_encontrado]["activo"] = False
         print("propiedad desactivada.")
     else:
         print("propiedad no encontrada o ya inactiva")
     return propiedades
 
-def listar_propiedades(propiedades):
+def listar_propiedades(propiedades): #lista propiedades
     print("\nlistado de propiedades activas:")
-    for cod, datos in propiedades.items():
-        if datos["activo"]:
+    for cod, datos in propiedades.items(): #recorre las propiedades dentro del diccionario
+        if datos["activo"]: #verifica si activo=True e imprime los activos
             print(f"codigo: {cod} | direccion: {datos['direccion']} | propietario: {datos['propietario']} | alquiler: ${datos['valor']}")
 
-def registrar_comision(propiedades, comisiones):
+def registrar_comision(propiedades, comisiones): #registra comisión del 10% del valor de una propiedad activa.
     cod_prop = input("ingrese codigo de la propiedad: ")
     if cod_prop in propiedades and propiedades[cod_prop]["activo"]:
         valor = propiedades[cod_prop]["valor"]
-        monto = valor * 0.10
-        fecha = generar_fecha_hora()
-        comisiones.append({
+        monto = valor * 0.10 #calculo del 10% del valor
+        fecha = generar_fecha_hora() #registra fecha y hora usando la funcion
+        comisiones.append({ #agrega los datos a "comisiones"
             "fecha": fecha,
             "propiedad": cod_prop,
             "monto": monto
@@ -146,24 +146,25 @@ def registrar_comision(propiedades, comisiones):
         print("propiedad no encontrada o inactiva.")
     return comisiones
 
-def comisiones_del_mes(comisiones):
+def comisiones_del_mes(comisiones): #mostrar comisiones en el mes y año actuales
     print("\ncomisiones del mes en curso:")
     hoy = datetime.now()
-    for c in comisiones:
+    for c in comisiones: #compara la fecha de cada comisión con la fecha actual
         fecha = datetime.strptime(c["fecha"], "%Y.%m.%d %H:%M:%S")
-        if fecha.month == hoy.month and fecha.year == hoy.year:
+        if fecha.month == hoy.month and fecha.year == hoy.year: #si coinciden, se imprimen
             print(f"{c['fecha']} | propiedad: {c['propiedad']} | comision: ${c['monto']:.2f}")
             
-def resumen_anual_comisiones_valor(comisiones):
-    print("\nresumen anual de comisiones por propiedad (pesos):")
-    año_actual = datetime.now().year
-    totales = {}
 
-    for c in comisiones:
-        fecha = datetime.strptime(c["fecha"], "%Y.%m.%d %H:%M:%S")
-        if fecha.year == año_actual:
+def resumen_anual_comisiones_valor(comisiones): #Muestra todas las comisiones x propiedad durante el año actual
+    print("\nresumen anual de comisiones por propiedad (pesos):")
+    año_actual = datetime.now().year  #se establece el año actual
+    totales = {} #inicializamos diccionario para ir sumando los montos de comisiones
+
+    for c in comisiones: #recorremos comisiones
+        fecha = datetime.strptime(c["fecha"], "%Y.%m.%d %H:%M:%S") # convertimos cadena en formato datetime
+        if fecha.year == año_actual: #comparamos el año con el establecido
             prop = c["propiedad"]
-            totales[prop] = totales.get(prop, 0) + c["monto"]
+            totales[prop] = totales.get(prop, 0) + c["monto"] #se suma el monto de la comisión al acumulado total de la propiedad
 
     if totales:
         for prop, monto in totales.items():
@@ -171,16 +172,17 @@ def resumen_anual_comisiones_valor(comisiones):
     else:
         print("no hay comisiones registradas en el año actual.")
 
-def resumen_anual_comisiones_cantidad(comisiones):
-    print("\nresumen anual de comisiones por propiedad (cantidades):")
-    año_actual = datetime.now().year
-    conteo = {}
 
-    for c in comisiones:
-        fecha = datetime.strptime(c["fecha"], "%Y.%m.%d %H:%M:%S")
-        if fecha.year == año_actual:
+def resumen_anual_comisiones_cantidad(comisiones): #mostar total de comisiones registradas por propiedad durante el año actual
+    print("\nresumen anual de comisiones por propiedad (cantidades):")
+    año_actual = datetime.now().year #establecer año actual
+    conteo = {} #inicializar diccionario para contar cantidad de comisiones por propiedad
+
+    for c in comisiones: #recorre comisiones
+        fecha = datetime.strptime(c["fecha"], "%Y.%m.%d %H:%M:%S") #convierte cadena al formato datetime (YYYY.MM.DD HH:MM:SS)
+        if fecha.year == año_actual: #filtra comisiones del año actual
             prop = c["propiedad"]
-            conteo[prop] = conteo.get(prop, 0) + 1
+            conteo[prop] = conteo.get(prop, 0) + 1 #cuenta comisiones por propiedad
 
     if conteo:
         for prop, cantidad in conteo.items():
@@ -188,8 +190,9 @@ def resumen_anual_comisiones_cantidad(comisiones):
     else:
         print("no hay comisiones registradas en el año actual.")
 
+
 def informe():
-    print("informe a mejorar / pensar mejor pq no tengo nidea")
+    print("informe a mejorar") #falta implementacion para engrega final
 
 #----------------------------------------------------------------------------------------------
 # CUERPO PRINCIPAL
