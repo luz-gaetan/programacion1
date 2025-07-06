@@ -15,7 +15,7 @@ Pendientes:
 # MÓDULOS
 #----------------------------------------------------------------------------------------------
 from datetime import datetime
-
+import re
 #----------------------------------------------------------------------------------------------
 # FUNCIONES
 #----------------------------------------------------------------------------------------------
@@ -43,7 +43,13 @@ def alta_propietario(propietarios):
         nombre = input("ingrese nombre completo: ")
         dni = input("ingrese el dni: ")
         telefono = input("ingrese el telefono: ")
-        email = input("ingrese el email: ")
+            while True:
+                email = input("ingrese el email: ")
+                if validar_email(email):
+                    break
+                else:
+                    print("Email inválido.")
+                    
         propietarios[codigo] = {
             "id": codigo,
             "nombre": nombre,
@@ -61,7 +67,14 @@ def modificar_propietario(propietarios): #para modificar datos de un propetario
         propietarios[codigo]["nombre"] = input("nuevo nombre: ") #reemplaza los campos
         propietarios[codigo]["dni"] = input("nuevo DNI: ")
         propietarios[codigo]["telefono"] = input("nuevo telefono: ")
-        propietarios[codigo]["email"] = input("nuevo email: ") 
+
+            while True:
+                nuevo_email = input("nuevo email: ")
+                if validar_email(nuevo_email):
+                    propietarios[codigo]["email"] = nuevo_email
+                    break
+                else:
+                    print("Email inválido. Intente nuevamente.")
         print("propietario modificado.")
     else:
         print("propietario no encontrado o inactivo.") #si el propietario no es activo, no hay campos a reeplazar
@@ -194,6 +207,9 @@ def resumen_anual_comisiones_cantidad(comisiones): #mostar total de comisiones r
 def informe():
     print("informe a mejorar") #falta implementacion para engrega final
 
+def validar_email(email):
+    pat = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+    return re.match(pat, email) is not None
 #----------------------------------------------------------------------------------------------
 # CUERPO PRINCIPAL
 #----------------------------------------------------------------------------------------------
