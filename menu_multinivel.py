@@ -25,30 +25,37 @@ def generar_fecha_hora():  #Genera y retorna fecha y hora actual en 'YYYY.MM.DD 
 
 def valor_alquiler():
     while True:
-        entrada = input("ingrese el valor del alquiler: ") #solicita valor y permite cancelar con-1
-        if entrada == "-1":
-            print("operacion cancelada.")
-            return -1
-        elif entrada.isdigit(): 
-            return int(entrada)
-        else: 
+        try:
+            entrada = input("ingrese el valor del alquiler: ") #solicita valor y permite cancelar con-1
+            if entrada == "-1":
+                print("operacion cancelada.")
+                return -1
+            valor = int(entrada)
+            if valor > 0:
+                return valor
+            else:
+                print("El valor debe ser un numero entero positivo")
+        except ValueError: 
             print("entrada invalida, tenes q ingresar un numero entero positivo.") #asefura que la entrada sea entera positiva
 
 def alta_propietario(propietarios):
-    print("\n--- alta de propietario ---") #da de alta un nuevo propietario si el codigo no existe
-    codigo = input("ingrese el codigo del propietario: ")
-    if codigo in propietarios:
-        print("el propietario ya existe.")
-    else: #solicita datos personales y los almacena en el diccionario
+    try:
+        print("\n--- alta de propietario ---") #da de alta un nuevo propietario si el codigo no existe
+        codigo = input("ingrese el codigo del propietario: ")
+        if codigo in propietarios:
+            print("el propietario ya existe.")
+            return propietarios
+    
         nombre = input("ingrese nombre completo: ")
         dni = input("ingrese el dni: ")
         telefono = input("ingrese el telefono: ")
-            while True:
-                email = input("ingrese el email: ")
-                if validar_email(email):
-                    break
-                else:
-                    print("Email inválido.")
+        
+        while True:
+            email = input("ingrese el email: ")
+            if validar_email(email):
+                break
+            else:
+                print("Email inválido")
                     
         propietarios[codigo] = {
             "id": codigo,
@@ -59,14 +66,17 @@ def alta_propietario(propietarios):
             "activo": True
         }
         print("propietario agregado correctamente.") #mensaje de confirmacion
+    except Exception as e:
+        print(f"Error al agregar propietario: {e}")
     return propietarios
 
 def modificar_propietario(propietarios): #para modificar datos de un propetario
-    codigo = input("ingrese codigo del propietario que qeres modificar: ")
-    if codigo in propietarios and propietarios[codigo]["activo"]:
-        propietarios[codigo]["nombre"] = input("nuevo nombre: ") #reemplaza los campos
-        propietarios[codigo]["dni"] = input("nuevo DNI: ")
-        propietarios[codigo]["telefono"] = input("nuevo telefono: ")
+    try:
+        codigo = input("ingrese codigo del propietario que qeres modificar: ")
+        if codigo in propietarios and propietarios[codigo]["activo"]:
+            propietarios[codigo]["nombre"] = input("nuevo nombre: ") #reemplaza los campos
+            propietarios[codigo]["dni"] = input("nuevo DNI: ")
+            propietarios[codigo]["telefono"] = input("nuevo telefono: ")
 
             while True:
                 nuevo_email = input("nuevo email: ")
@@ -75,9 +85,11 @@ def modificar_propietario(propietarios): #para modificar datos de un propetario
                     break
                 else:
                     print("Email inválido. Intente nuevamente.")
-        print("propietario modificado.")
-    else:
-        print("propietario no encontrado o inactivo.") #si el propietario no es activo, no hay campos a reeplazar
+            print("propietario modificado.")
+        else:
+            print("propietario no encontrado o inactivo.") #si el propietario no es activo, no hay campos a reeplazar
+    except Exception as e:
+        print(f"Error al modificar propietario: {e}") 
     return propietarios
 
 def baja_propietario(propietarios): #dar de baja a propietarios activos (sin eliminarlos, simplemente cambia el estado)
