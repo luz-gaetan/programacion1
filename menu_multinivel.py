@@ -5,7 +5,7 @@ Fecha: 27/05/2025
 Autor: Grupo 7 (Nicolas Mendez, Valentina Clemente)
 ----------------------------------------------------------------------------------------------------
 Título: Sistema de Gestión Inmobiliaria
-Autores: Grupo 7 - Nicolas Mendez, Valentina Clemente
+Autores: Grupo 7 - Nicolas Mendez, Valentina Clemente, (brendan russell solo valido el mail) el resto de los integrantes no hizo absolutamente nada.
 Fecha: 27/05/2025
 Materia: Programación I
 
