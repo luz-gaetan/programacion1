@@ -68,52 +68,85 @@ incluyendo el uso de datos multivaluados y diseño estructurado sin programació
 #----------------------------------------------------------------------------------------------
 from datetime import datetime
 import re
+import json
+
 #----------------------------------------------------------------------------------------------
 # FUNCIONES
 #----------------------------------------------------------------------------------------------
+#Funciones para Json---------------------------------------------------------------------------
+def leer_json(nombre_archivo):
+    try:
+        with open(nombre_archivo, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {}
+
+def escribir_json(nombre_archivo, datos):
+    with open(nombre_archivo, "w", encoding="utf-8") as f:
+        json.dump(datos, f, ensure_ascii=False, indent=4)
+
+
+def leer_json(nombre_archivo):
+    try:
+        with open(nombre_archivo, mode="r", encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {}
+    except json.JSONDecodeError:
+        return {}
+
+def escribir_json(nombre_archivo, diccionario):
+    with open(nombre_archivo, mode="w", encoding="utf-8") as f:
+        json.dump(diccionario, f, ensure_ascii=False, indent=4)
+
+
+#Funcines Generales-------------------------------------
 def generar_fecha_hora():  #Genera y retorna fecha y hora actual en 'YYYY.MM.DD HH:MM:SS para registrar momentos exactos
     ahora = datetime.now()
     return ahora.strftime("%Y.%m.%d %H:%M:%S")
 
 def valor_alquiler():
-    while True:
-        entrada = input("ingrese el valor del alquiler: ") #solicita valor y permite cancelar con-1
-        if entrada == "-1":
-            print("operacion cancelada.")
-            return -1
-        elif entrada.isdigit(): 
-            return int(entrada)
-        else: 
-            print("entrada invalida, tenes q ingresar un numero entero positivo.") #asefura que la entrada sea entera positiva
+   while True:
+      entrada = input("ingrese el valor del alquiler: ") #solicita valor y permite cancelar con-1
+      if entrada == "-1":
+         print("operacion cancelada.")
+         return -1
+      elif entrada.isdigit(): 
+         return int(entrada)
+      else: 
+         print("entrada invalida, tenes q ingresar un numero entero positivo.") #asefura que la entrada sea entera positiva
 
 def alta_propietario(propietarios):
-    print("\n--- Agregar propietario ---") #agrega un nuevo propietario
-    codigo = input("ingrese el codigo del propietario: ")
-    if codigo in propietarios:
-        print("el propietario ya existe.")
-    else: #solicita datos personales y los almacena en el diccionario
-        nombre = input("ingrese nombre completo: ")
-        dni = input("ingrese el dni: ")
-        telefono = input("ingrese el telefono: ")
-        while True:
-                email = input("ingrese el email: ")
-                if validar_email(email):
-                    break
-                else:
-                    print("Email inválido.")
-                    
-        propietarios[codigo] = {
-            "id": codigo,
-            "nombre": nombre,
-            "dni": dni,
-            "telefono": telefono,
-            "email": email,
-            "activo": True
-        }
-        print("propietario agregado correctamente.") #mensaje de confirmacion
-    return propietarios
+   propietarios = leer_json("propietarios.json")
+   print("\n--- Agregar propietario ---") #agrega un nuevo propietario
+   codigo = input("ingrese el codigo del propietario: ")
+   if codigo in propietarios:
+      print("el propietario ya existe.")
+   else: #solicita datos personales y los almacena en el diccionario
+      nombre = input("ingrese nombre completo: ")
+      dni = input("ingrese el dni: ")
+      telefono = input("ingrese el telefono: ")
+      while True:          
+         email = input("ingrese el email: ")
+         if validar_email(email):
+            break
+         else:
+            print("Email inválido.")
+            
+      propietarios[codigo] = {
+         "id": codigo,
+         "nombre": nombre,
+         "dni": dni,
+         "telefono": telefono,            
+         "email": email,
+         "activo": True
+      }
+      escribir_json("propietarios.json", propietarios)
+      print("propietario agregado correctamente.") #mensaje de confirmacion
+    
 
 def modificar_propietario(propietarios): #para modificar datos de un propetario
+    propietarios = leer_json("propietarios.json")
     codigo = input("ingrese codigo del propietario que qeres modificar: ")
     if codigo in propietarios and propietarios[codigo]["activo"]:
         propietarios[codigo]["nombre"] = input("nuevo nombre: ") #reemplaza los campos
@@ -127,60 +160,70 @@ def modificar_propietario(propietarios): #para modificar datos de un propetario
                     break
                 else:
                     print("Email inválido. Intente nuevamente.")
+        
+        escribir_json("propietarios.json", propietarios)            
         print("propietario modificado.")
     else:
         print("propietario no encontrado o inactivo.") #si el propietario no es activo, no hay campos a reeplazar
-    return propietarios
+    
 
 def baja_propietario(propietarios): #dar de baja a propietarios activos (sin eliminarlos, simplemente cambia el estado)
+    propietarios = leer_json("propietarios.json")
     codigo = input("ingrese codigo del propietario a eliminar: ")
     if codigo in propietarios and propietarios[codigo]["activo"]: #si se encuentra el codigo ingresado, se reemplaza el valor del codigo (activo = False)
         propietarios[codigo]["activo"] = False #damos de baja 
+        escribir_json("propietarios.json", propietarios)
         print("propietario desactivado.")
     else:
         print("propietario no encontrado o ya inactivo.") #si ya esta inactivo, no hay nada que dar de baja
-    return propietarios
+
 
 def listar_propietarios(propietarios): #mostrar los propietarios activos
+    propietarios = leer_json("propietarios.json")
     print("\nListado de propietarios activos:")
     for cod, datos in propietarios.items(): #recorre todos los propietarios
         if datos["activo"]: #imprime solo los que son activos
             print(f"codigo: {cod} | nombre: {datos['nombre']} | dni: {datos['dni']} | telefeono: {datos['telefono']}| email: {datos['email']}")
 
-def alta_propiedad(propiedades): #dar de alta una nueva propiedad si no existe
-    codigo = input("ingrese codigo de la propiedad: ")
-    if codigo in propiedades: #si el codigo ya existe, no hay nada que agregar
-        print("la propiedad ya existe.") 
-    else: #no existe el codigo, solicita datos
-        direccion = input("ingrese dirección: ")
-        propietario = input("codigo del propietario: ")
-        valor = valor_alquiler()
-        propiedades[codigo] = {
-            "direccion": direccion,
-            "propietario": propietario,
-            "valor": valor,
-            "activo": True
-        }
-        if propietario in propietarios:
-            if "propiedades" not in propietarios[propietario]:
-                propietarios[propietario]["propiedades"] = []
-            propietarios[propietario]["propiedades"].append(codigo)
-        propiedades[codigo]["comisiones"] = []
-        print("propiedad agregada.") #mensaje de confirmacion
-    return propiedades
+def alta_propiedad(propiedades, propietarios): #dar de alta una nueva propiedad si no existe
+   propiedades = leer_json("propiedades.json")
+   codigo = input("ingrese codigo de la propiedad: ")
+   if codigo in propiedades: #si el codigo ya existe, no hay nada que agregar
+      print("la propiedad ya existe.") 
+   else: #no existe el codigo, solicita datos
+      direccion = input("ingrese dirección: ")
+      propietario = input("codigo del propietario: ")
+      valor = valor_alquiler()
+      propiedades[codigo] = {
+         "direccion": direccion,
+         "propietario": propietario,
+         "valor": valor,
+         "activo": True
+      }
+      if propietario in propietarios:
+         if "propiedades" not in propietarios[propietario]:
+            propietarios[propietario]["propiedades"] = []
+         propietarios[propietario]["propiedades"].append(codigo)
+      propiedades[codigo]["comisiones"] = []
+      escribir_json("propiedades.json", propiedades)
+      print("propiedad agregada.") #mensaje de confirmacion
+
 
 def modificar_propiedad(propiedades): #modificar datos de propiedad activa
+    propiedades = leer_json("propiedades.json")
     codigo = input("ingrese el codigo de la propiedad a modificar: ") 
     if codigo in propiedades and propiedades[codigo]["activo"]: #reemplaza dirección, propietario y valor 
         propiedades[codigo]["direccion"] = input("nueva dirección: ")
         propiedades[codigo]["propietario"] = input("nuevo codigo del propietario: ")
         propiedades[codigo]["valor"] = valor_alquiler()
+        escribir_json("propiedades.json", propiedades)
         print("propiedad modificada.")
     else:
         print("propiedad no encontrada o inactiva.") #al no estar activa, no se pide una nueva solicitud de datos
-    return propiedades
+
 
 def baja_propiedad(propiedades): #da de baja una propiedad (sin eliminarla)
+    propiedades = leer_json("propiedades.json")
     codigo = input("ingrese el codigo de la propiedad a eliminar: ").lower()
     codigo_encontrado = None
     for key in propiedades:
@@ -189,47 +232,52 @@ def baja_propiedad(propiedades): #da de baja una propiedad (sin eliminarla)
             break
     if codigo_encontrado and propiedades[codigo_encontrado]["activo"]: 
         propiedades[codigo_encontrado]["activo"] = False
+        escribir_json("propiedades.json", propiedades)
         print("propiedad desactivada.")
     else:
         print("propiedad no encontrada o ya inactiva")
-    return propiedades
+   
 
 def listar_propiedades(propiedades): #lista propiedades
+    propiedades = leer_json("propiedades.json")
     print("\nlistado de propiedades activas:")
     for cod, datos in propiedades.items(): #recorre las propiedades dentro del diccionario
         if datos["activo"]: #verifica si activo=True e imprime los activos
             print(f"codigo: {cod} | direccion: {datos['direccion']} | propietario: {datos['propietario']} | alquiler: ${datos['valor']}")
 
 def registrar_comision(propiedades, comisiones):
-    cod_prop = input("Ingrese código de la propiedad: ")
-    if cod_prop in propiedades and propiedades[cod_prop]["activo"]:
-        valor = propiedades[cod_prop]["valor"]
-        monto = valor * 0.10
-        fecha_completa = generar_fecha_hora()
-        fecha = fecha_completa.split()[0] 
-        tipo_operacion = input("Tipo de operación (venta/alquiler): ").strip().lower()
-        mes_anio = datetime.now().strftime("%b.%y").upper()
-        dni_propietario = propiedades[cod_prop].get("dni", "DESCONOCIDO")
+   cod_prop = input("Ingrese código de la propiedad: ")
+   if cod_prop in propiedades and propiedades[cod_prop]["activo"]:
+      valor = propiedades[cod_prop]["valor"]
+      monto = valor * 0.10
+      fecha_completa = generar_fecha_hora()
+      fecha = fecha_completa.split()[0] 
+      tipo_operacion = input("Tipo de operación (venta/alquiler): ").strip().lower()
+      mes_anio = datetime.now().strftime("%b.%y").upper()
+      dni_propietario = propiedades[cod_prop].get("dni", "DESCONOCIDO")
 
-        nueva_comision = {
-            "codigo_propiedad": cod_prop,
-            "dni_propietario": dni_propietario,
-            "monto": monto,
-            "tipo_operacion": tipo_operacion,
-            "mes_anio": mes_anio
-        }
-        if fecha not in comisiones:
-            comisiones[fecha] = []
-        comisiones[fecha].append(nueva_comision)
-        if "comisiones" not in propiedades[cod_prop]:
-            propiedades[cod_prop]["comisiones"] = []
-        propiedades[cod_prop]["comisiones"].append(monto)
-        print(f"Comisión registrada: ${monto:.2f} ({fecha_completa})")
-    else:
+      nueva_comision = {
+         "codigo_propiedad": cod_prop,
+         "dni_propietario": dni_propietario,
+         "monto": monto,
+         "tipo_operacion": tipo_operacion,
+         "mes_anio": mes_anio
+      }
+      if fecha not in comisiones:
+         comisiones[fecha] = []
+      comisiones[fecha].append(nueva_comision)
+      
+      if "comisiones" not in propiedades[cod_prop]:
+         propiedades[cod_prop]["comisiones"] = []
+         propiedades[cod_prop]["comisiones"].append(monto)
+         escribir_json("comisiones.json", comisiones) 
+         print(f"Comisión registrada: ${monto:.2f} ({fecha_completa})")
+      else:
         print("Propiedad no encontrada o inactiva.")
-    return comisiones
+  
 
 def comisiones_del_mes(comisiones):
+    comisiones = leer_json("comisiones.json")
     print("\ncomisiones del mes en curso:")
     hoy = datetime.now()
     for fecha_str, lista in comisiones.items():
@@ -239,15 +287,16 @@ def comisiones_del_mes(comisiones):
                 print(f"{fecha_str} | propiedad: {c['codigo_propiedad']} | comision: ${c['monto']:.2f}")
 
 def resumen_anual_comisiones_valor(comisiones, propiedades):
-    print("\nResumen anual de comisiones por propiedad (pesos):")
-    año_actual = datetime.now().year
-    totales = {}
-    for fecha_str, lista in comisiones.items():
-        fecha = datetime.strptime(fecha_str, "%Y.%m.%d")
-        if fecha.year == año_actual:
-            for c in lista:
-                prop = c["codigo_propiedad"]
-                totales[prop] = totales.get(prop, 0) + c["monto"]
+   comisiones = leer_json("comisiones.json")
+   print("\nResumen anual de comisiones por propiedad (pesos):")
+   año_actual = datetime.now().year
+   totales = {}
+   for fecha_str, lista in comisiones.items():
+      fecha = datetime.strptime(fecha_str, "%Y.%m.%d")
+      if fecha.year == año_actual:
+         for c in lista:
+            prop = c["codigo_propiedad"]
+            totales[prop] = totales.get(prop, 0) + c["monto"]
     for cod_prop, datos in propiedades.items():
         if datos["activo"]:
             lista_comisiones = datos.get("comisiones", [])
@@ -260,26 +309,29 @@ def resumen_anual_comisiones_valor(comisiones, propiedades):
     else:
         print("No hay comisiones registradas en el año actual.")
 
+
 def resumen_anual_comisiones_cantidad(comisiones, propiedades):
-    print("\nResumen anual de comisiones por propiedad (cantidad):")
-    año_actual = datetime.now().year
-    conteo = {}
-    for fecha_str, lista in comisiones.items():
-        fecha = datetime.strptime(fecha_str, "%Y.%m.%d")
-        if fecha.year == año_actual:
-            for c in lista:
-                prop = c["codigo_propiedad"]
-                conteo[prop] = conteo.get(prop, 0) + 1
-    for cod_prop, datos in propiedades.items():
-        if datos["activo"]:
-            lista_comisiones = datos.get("comisiones", [])
-            conteo[cod_prop] = conteo.get(cod_prop, 0) + len(lista_comisiones)
+   comisiones = leer_json("comisiones.json")
+   print("\nResumen anual de comisiones por propiedad (cantidad):")
+   año_actual = datetime.now().year
+   conteo = {}
+   for fecha_str, lista in comisiones.items():
+      fecha = datetime.strptime(fecha_str, "%Y.%m.%d")
+      if fecha.year == año_actual:
+         for c in lista:
+            prop = c["codigo_propiedad"]
+            conteo[prop] = conteo.get(prop, 0) + 1
+    
+   for cod_prop, datos in propiedades.items():
+      if datos["activo"]:
+         lista_comisiones = datos.get("comisiones", [])
+         conteo[cod_prop] = conteo.get(cod_prop, 0) + len(lista_comisiones)
 
     if conteo:
-        for prop, cantidad in conteo.items():
-            print(f"Propiedad: {prop} | Cantidad de comisiones: {cantidad}")
+       for prop, cantidad in conteo.items():
+          print(f"Propiedad: {prop} | Cantidad de comisiones: {cantidad}")
     else:
-        print("No hay comisiones registradas en el año actual.")
+       print("No hay comisiones registradas en el año actual.")
 
 def informe():
     print("informe a mejorar") #falta implementacion para engrega final
@@ -488,7 +540,7 @@ def main():
                 
                 elif opcionSubmenu == "1":   # Opción 1 del submenú
                     print("ingrese a la propiedad")
-                    propiedades = alta_propiedad(propiedades)
+                    propiedades = alta_propiedad(propiedades, propietarios)
                     
                 elif opcionSubmenu == "2":   # Opción 2 del submenú
                     print("modifique la propiedad")
