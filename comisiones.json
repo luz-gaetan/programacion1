@@ -1,0 +1,90 @@
+{
+    "2024.01.15": [
+        {
+            "codigo_propiedad": "P001",
+            "monto": 3000,
+            "tipo_operacion": "alquiler",
+            "mes_anio": "ENE.24"
+        }
+    ],
+    "2024.02.10": [
+        {
+            "codigo_propiedad": "P002",
+            "monto": 12000,
+            "tipo_operacion": "venta",
+            "mes_anio": "FEB.24"
+        }
+    ],
+    "2024.03.05": [
+        {
+            "codigo_propiedad": "P003",
+            "monto": 5000,
+            "tipo_operacion": "alquiler",
+            "mes_anio": "MAR.24"
+        }
+    ],
+    "2024.04.12": [
+        {
+            "codigo_propiedad": "P004",
+            "monto": 15000,
+            "tipo_operacion": "venta",
+            "mes_anio": "ABR.24"
+        }
+    ],
+    "2024.05.22": [
+        {
+            "codigo_propiedad": "P005",
+            "monto": 3500,
+            "tipo_operacion": "alquiler",
+            "mes_anio": "MAY.24"
+        }
+    ],
+    "2024.06.30": [
+        {
+            "codigo_propiedad": "P006",
+            "monto": 10000,
+            "tipo_operacion": "venta",
+            "mes_anio": "JUN.24"
+        }
+    ],
+    "2024.07.08": [
+        {
+            "codigo_propiedad": "P007",
+            "monto": 4000,
+            "tipo_operacion": "alquiler",
+            "mes_anio": "JUL.24"
+        }
+    ],
+    "2024.08.19": [
+        {
+            "codigo_propiedad": "P008",
+            "monto": 13000,
+            "tipo_operacion": "venta",
+            "mes_anio": "AGO.24"
+        }
+    ],
+    "2024.09.27": [
+        {
+            "codigo_propiedad": "P009",
+            "monto": 4200,
+            "tipo_operacion": "alquiler",
+            "mes_anio": "SEP.24"
+        }
+    ],
+    "2024.10.03": [
+        {
+            "codigo_propiedad": "P010",
+            "monto": 9000,
+            "tipo_operacion": "venta",
+            "mes_anio": "OCT.24"
+        }
+    ],
+    "2025.07.07": [
+        {
+            "codigo_propiedad": "P010",
+            "monto": 8700.0,
+            "tipo_operacion": "venta",
+            "mes_anio": "JUL.25"
+        }
+    ]
+}

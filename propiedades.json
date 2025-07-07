@@ -1,0 +1,92 @@
+{
+    "P001": {
+        "direccion": "Calle 123",
+        "propietario": "Juan Pérez",
+        "tipo": "Departamento",
+        "superficie": 75,
+        "valor": 120000,
+        "dni": "30111222",
+        "activo": true
+    },
+    "P002": {
+        "direccion": "Av. 456",
+        "propietario": "María Gómez",
+        "tipo": "Casa",
+        "superficie": 150,
+        "valor": 250000,
+        "dni": "30222333",
+        "activo": true
+    },
+    "P003": {
+        "direccion": "Diag. 789",
+        "propietario": "Carlos López",
+        "tipo": "PH",
+        "superficie": 90,
+        "valor": 180000,
+        "dni": "30333444",
+        "activo": true
+    },
+    "P004": {
+        "direccion": "Las Heras 101",
+        "propietario": "Ana Torres",
+        "tipo": "Casa",
+        "superficie": 200,
+        "valor": 310000,
+        "dni": "30444555",
+        "activo": true
+    },
+    "P005": {
+        "direccion": "San Martín 202",
+        "propietario": "Laura Méndez",
+        "tipo": "Departamento",
+        "superficie": 60,
+        "valor": 95000,
+        "dni": "30555666",
+        "activo": true
+    },
+    "P006": {
+        "direccion": "Belgrano 303",
+        "propietario": "Pedro Rodríguez",
+        "tipo": "PH",
+        "superficie": 85,
+        "valor": 150000,
+        "dni": "30666777",
+        "activo": true
+    },
+    "P007": {
+        "direccion": "Córdoba 404",
+        "propietario": "Lucía Fernández",
+        "tipo": "Departamento",
+        "superficie": 70,
+        "valor": 110000,
+        "dni": "30777888",
+        "activo": true
+    },
+    "P008": {
+        "direccion": "Santa Fe 505",
+        "propietario": "Diego Suárez",
+        "tipo": "Casa",
+        "superficie": 180,
+        "valor": 290000,
+        "dni": "30888999",
+        "activo": true
+    },
+    "P009": {
+        "direccion": "Rivadavia 606",
+        "propietario": "Marta Díaz",
+        "tipo": "PH",
+        "superficie": 95,
+        "valor": 160000,
+        "dni": "30999000",
+        "activo": true
+    },
+    "P010": {
+        "direccion": "Mitre 707",
+        "propietario": "Jorge Silva",
+        "tipo": "Departamento",
+        "superficie": 55,
+        "valor": 87000,
+        "dni": "31000111",
+        "activo": true
+    }
+}
