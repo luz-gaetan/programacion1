@@ -1,1 +1,72 @@
-null
+{
+    "30111222": {
+        "nombre": "Juan Pérez",
+        "dni": "30111222",
+        "telefono": "1155550001",
+        "email": "juan@gmail.com",
+        "activo": true
+    },
+    "30222333": {
+        "nombre": "María Gómez",
+        "dni": "30222333",
+        "telefono": "1155550002",
+        "email": "maria@gmail.com",
+        "activo": true
+    },
+    "30333444": {
+        "nombre": "Carlos López",
+        "dni": "30333444",
+        "telefono": "1155550003",
+        "email": "carlos@gmail.com",
+        "activo": true
+    },
+    "30444555": {
+        "nombre": "Ana Torres",
+        "dni": "30333444",
+        "telefono": "1155550004",
+        "email": "ana@gmail.com",
+        "activo": true
+    },
+    "30555666": {
+        "nombre": "Laura Méndez",
+        "dni": "30444555",
+        "telefono": "1155550005",
+        "email": "laura@gmail.com",
+        "activo": true
+    },
+    "30666777": {
+        "nombre": "Pedro Rodríguez",
+        "dni": "30555666",
+        "telefono": "1155550006",
+        "email": "pedro@gmail.com",
+        "activo": true
+    },
+    "30777888": {
+        "nombre": "Lucía Fernández",
+        "dni": "30666777",
+        "telefono": "1155550007",
+        "email": "lucia@gmail.com",
+        "activo": true
+    },
+    "30888999": {
+        "nombre": "Diego Suárez",
+        "dni": "30777888",
+        "telefono": "1155550008",
+        "email": "diego@gmail.com",
+        "activo": true
+    },
+    "30999000": {
+        "nombre": "Marta Díaz",
+        "dni": "30999000",
+        "telefono": "1155550009",
+        "email": "marta@gmail.com",
+        "activo": true
+    },
+    "31000111": {
+        "nombre": "Jorge Silva",
+        "dni": "31000111",
+        "telefono": "1155550010",
+        "email": "jorge@gmail.com",
+        "activo": true
+    }
+}
